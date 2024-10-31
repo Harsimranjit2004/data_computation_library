@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Downloads\covid_impact_on_work new.csv" />
+    <None Include="large_test_file.csv" />
     <None Include="series_data_no_index.csv" />
     <None Include="single_series_data.csv" />
   </ItemGroup>
