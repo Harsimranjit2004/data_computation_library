@@ -6,11 +6,14 @@
 #include <string>
 #include <optional>
 #include <fstream>
+#include <unordered_map>
 #include "Utils.h"
 namespace project {
 	template<typename T> 
 	class Series {
 		std::vector<std::optional<T>> m_data{}; // can we present or empty (null values)
+		std::vector<std::string> m_index{};
+		std::unordered_map<std::string, size_t> m_orderedMap{};
 		size_t m_size{};
 	public:
 		std::ostream& print(std::ostream & = std::cout) const;
@@ -47,18 +50,28 @@ namespace project {
 			std::cerr << "File failed to open" << std::endl;
 			return;
 		}
-		if (!hasIndex) {
-			std::string line;
-			while (std::getline(file, line)) {
-				if (line.empty() || line == "NULL" || line == ",") {
-					m_data.emplace_back(std::nullopt); 
-				}
-				else {
-					m_data.emplace_back(utils.convertStringToType<T>(line)); 
-				}
-				m_size++;
-			};
-		}
+		std::string line;
+		while (std::getline(file, line)) {
+			m_size++;
+			line.erase(0, line.find_first_not_of(" \t\n\r\f\v"));
+			line.erase(line.find_last_not_of(" \t\n\r\f\v") + 1);
+			if (line.empty()) {
+				m_data.emplace_back(std::nullopt);
+				m_index.emplace_back(std::to_string(m_size - 1));
+				m_orderedMap[m]
+				continue;
+			}
+			if(hasIndex){
+				
+			}
+			if (line.empty() || line == "NULL" || line == ",") {
+				m_data.emplace_back(std::nullopt); 
+			}
+			else {
+				m_data.emplace_back(utils.convertStringToType<T>(line)); 
+			}
+		};
+		
 		file.close();
 		
 	}
