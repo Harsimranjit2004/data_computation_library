@@ -140,7 +140,9 @@
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseColumn.h" />
     <ClInclude Include="Cell.h" />
+    <ClInclude Include="Column.h" />
     <ClInclude Include="DataFrame.h" />
     <ClInclude Include="Series.h" />
     <ClInclude Include="Utils.h" />
