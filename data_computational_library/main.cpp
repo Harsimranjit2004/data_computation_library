@@ -12,31 +12,31 @@
 //
 //	std::cout << "Time taken: " << duration.count() << " microseconds" << std::endl;
 //	return 0;
+////}
+//#include <iostream>
+//#include "Series.h"
+//#include <chrono>
+//
+//using namespace project;
+//
+//int main() {
+//    // Record the start time
+//    auto start = std::chrono::high_resolution_clock::now();
+//
+//    // Create a Series object by reading the CSV file
+//    Series<double> s("large_test_file.csv", ',',true);
+//
+//    // Record the end time
+//    auto end = std::chrono::high_resolution_clock::now();
+//
+//    // Calculate the duration in seconds with decimal points
+//    std::chrono::duration<double> duration = end - start;
+//    //std::cout << s;
+//    // Output the duration
+//    std::cout << "Time taken: " << duration.count() << " seconds" << std::endl;
+//
+//    return 0;
 //}
-#include <iostream>
-#include "Series.h"
-#include <chrono>
-
-using namespace project;
-
-int main() {
-    // Record the start time
-    auto start = std::chrono::high_resolution_clock::now();
-
-    // Create a Series object by reading the CSV file
-    Series<double> s("large_test_file.csv", ',',true);
-
-    // Record the end time
-    auto end = std::chrono::high_resolution_clock::now();
-
-    // Calculate the duration in seconds with decimal points
-    std::chrono::duration<double> duration = end - start;
-    //std::cout << s;
-    // Output the duration
-    std::cout << "Time taken: " << duration.count() << " seconds" << std::endl;
-
-    return 0;
-}
 //
 //#include <iostream>
 //#include <fstream>

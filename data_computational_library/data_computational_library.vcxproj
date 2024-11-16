@@ -134,10 +134,13 @@
     <None Include="single_series_data.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="tester_cell.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cell.h" />
     <ClInclude Include="DataFrame.h" />
     <ClInclude Include="Series.h" />
     <ClInclude Include="Utils.h" />
