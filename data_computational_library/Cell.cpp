@@ -1,10 +1,12 @@
+#include <typeinfo>
 #include "Cell.h"
+
 using namespace std;
 namespace project {
-	void Cell::destroy()
-	{
+	void Cell::destroy() noexcept {
 		if (type == Type::STRING) {
-			stringValue.~basic_string();
+			using std::string;
+			stringValue.~string();
 		}
 		type = Type::NULL_TYPE;
 	}
@@ -121,7 +123,7 @@ namespace project {
 		return type == Type::NULL_TYPE;
 	}
 
-	bool Cell::setNull() noexcept
+	void Cell::setNull() noexcept
 	{
 		if (type == Type::STRING) {
 			stringValue.~basic_string();
@@ -172,15 +174,16 @@ namespace project {
 
 	// Arithmetic Operators
 	Cell Cell::operator+(const Cell& other) const {
-		if (type != other.type) throw std::runtime_error("Cannot add Cells of different types");
-		switch (type) {
-		case Type::INT64:
+		if (type == Type::INT64 && other.type == Type::INT64) {
 			return Cell(intValue + other.intValue);
-		case Type::DOUBLE:
-			return Cell(doubleValue + other.doubleValue);
-		default:
-			throw std::runtime_error("Addition not supported for this type");
 		}
+		else if ((type == Type::INT64 || type == Type::DOUBLE) &&
+			(other.type == Type::INT64 || other.type == Type::DOUBLE)) {
+			double lhs = (type == Type::INT64) ? static_cast<double>(intValue) : doubleValue;
+			double rhs = (other.type == Type::INT64) ? static_cast<double>(other.intValue) : other.doubleValue;
+			return Cell(lhs + rhs);
+		}
+		throw std::runtime_error("Cannot add Cells of different types");
 	}
 
 	Cell Cell::operator-(const Cell& other) const {

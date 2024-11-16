@@ -4,6 +4,7 @@
 #include <string> 
 #include <stdexcept>
 #include <type_traits>
+#include <typeinfo>
 namespace project {
 
 	class Cell {
@@ -16,7 +17,7 @@ namespace project {
 			double doubleValue;
 			std::string stringValue;
 		};
-		void destroy();
+		void destroy() noexcept;
 		struct always_false : std::false_type {};
 	public:
 		Cell();
@@ -30,12 +31,12 @@ namespace project {
 		Cell(Cell&& other) noexcept;
 
 		Cell& operator=(const Cell& other);
-		Cell& operator=(Cell&& other);
+		Cell& operator=(Cell&& other) noexcept;
 
 		~Cell();
 
 		bool isNull() const noexcept;
-		bool setNull() noexcept;
+		void setNull() noexcept;
 
 		template<typename T>
 		T get() const;
@@ -62,32 +63,27 @@ namespace project {
 	};
 	template<typename T>
 	T Cell::get() const {
-		static_assert(always_false<T>::value, "Unsupported type for Cell::get()");
-	}
-
-	// Specializations for get<T>()
-	template<>
-	int64_t Cell::get<int64_t>() const {
-		if (type != Type::INT64) {
-			throw "bad cast";
+		if constexpr (std::is_same_v<T, int64_t>) {
+			if (type != Type::INT64) {
+				throw std::bad_cast();
+			}
+			return intValue;
 		}
-		return intValue;
-	}
-
-	template<>
-	double Cell:: get<double>() const {
-		if (type != Type::DOUBLE) {
-			throw "bad cast";
+		else if constexpr (std::is_same_v<T, double>) {
+			if (type != Type::DOUBLE) {
+				throw std::bad_cast();
+			}
+			return doubleValue;
 		}
-		return doubleValue;
-	}
-
-	template<>
-	std::string Cell::get<std::string>() const {
-		if (type != Type::STRING) {
-			throw "bad cast";
+		else if constexpr (std::is_same_v<T, std::string>) {
+			if (type != Type::STRING) {
+				throw std::bad_cast();
+			}
+			return stringValue;
 		}
-		return stringValue;
+		else {
+			static_assert(std::is_same_v<T, void>, "Unsupported type for Cell::get()");
+		}
 	}
 	 template<typename T>
 	 inline void Cell::set(T&& val)
