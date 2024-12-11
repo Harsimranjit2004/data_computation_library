@@ -2,7 +2,7 @@
 #ifndef HARSIMRAN_COLUMN_H
 #define HARSIMRAN_COLUMN_H
 #include <vector>
-#include "BaseColumn.h"
+#include "IBaseColumn.h"
 namespace project {
 	template<typename T> 
 	class Column : public BaseColumn {
@@ -45,5 +45,9 @@ namespace project {
 		T max() const;
 
 	};
+	template<typename T>
+	inline Column<T>::Column(const std::vector<T>& data)
+	{
+	}
 }
 #endif
