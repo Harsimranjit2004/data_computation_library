@@ -26,6 +26,11 @@ namespace project {
 		void set(size_t index, const Cell& cell);
 		void append(const Cell& cell);
 		std::shared_ptr<IBaseColumn> clone() const;
+
+
+		template<typename U=T>
+		typename std::enable_if<std::is_arithmetic<U>::value, double>::type
+			mean() const;
 	};
 	template<typename T>
 	inline InMemoryColumn<T>::InMemoryColumn(size_t initialReserve)

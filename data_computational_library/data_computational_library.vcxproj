@@ -135,15 +135,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cell.cpp" />
+    <ClCompile Include="FileReader.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tester_cell.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseColumn.h" />
+    <ClInclude Include="IBaseColumn.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="DataFrame.h" />
+    <ClInclude Include="InMemoryColumn.h" />
     <ClInclude Include="Series.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>

@@ -39,6 +39,9 @@
     <ClCompile Include="tester_cell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileReader.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataFrame.h">
@@ -56,7 +59,10 @@
     <ClInclude Include="Column.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseColumn.h">
+    <ClInclude Include="IBaseColumn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InMemoryColumn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
