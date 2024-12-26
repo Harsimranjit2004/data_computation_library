@@ -2,41 +2,47 @@
 #include "Cell.h"
 
 using namespace std;
-namespace project {
-	void Cell::destroy() noexcept {
-		if (type == Type::STRING) {
+namespace project
+{
+	void Cell::destroy() noexcept
+	{
+		if (type == Type::STRING)
+		{
 			using std::string;
 			stringValue.~string();
 		}
 		type = Type::NULL_TYPE;
 	}
-	Cell::Cell():type(Type::NULL_TYPE)
+	Cell::Cell() : type(Type::NULL_TYPE)
 	{
 	}
 
-	Cell::Cell(int64_t intValue):type(Type::INT64),intValue(intValue)
+	Cell::Cell(int64_t intValue) : type(Type::INT64), intValue(intValue)
 	{
 	}
 
-	Cell::Cell(double doubleValue) :type(Type::DOUBLE), doubleValue(doubleValue)
+	Cell::Cell(double doubleValue) : type(Type::DOUBLE), doubleValue(doubleValue)
 	{
 	}
 
-	Cell::Cell(const std::string& stringValue):type(Type::STRING)
+	Cell::Cell(const std::string &stringValue) : type(Type::STRING)
 	{
 		new (&this->stringValue) std::string(stringValue);
 	}
 
-	Cell::Cell(std::string&& stringValue) :type(Type::STRING) 
+	Cell::Cell(std::string &&stringValue) : type(Type::STRING)
 	{
 		new (&this->stringValue) std::string(std::move(stringValue));
 	}
 
-	Cell& Cell::operator=(const Cell& other) {
-		if (this != &other) {
+	Cell &Cell::operator=(const Cell &other)
+	{
+		if (this != &other)
+		{
 			destroy();
 			type = other.type;
-			switch (type) {
+			switch (type)
+			{
 			case Type::INT64:
 				intValue = other.intValue;
 				break;
@@ -54,11 +60,14 @@ namespace project {
 	}
 
 	// Move Assignment
-	Cell& Cell::operator=(Cell&& other) noexcept {
-		if (this != &other) {
+	Cell &Cell::operator=(Cell &&other) noexcept
+	{
+		if (this != &other)
+		{
 			destroy();
 			type = other.type;
-			switch (type) {
+			switch (type)
+			{
 			case Type::INT64:
 				intValue = other.intValue;
 				break;
@@ -76,8 +85,10 @@ namespace project {
 		return *this;
 	}
 	// Copy Constructor
-	Cell::Cell(const Cell& other) : type(other.type) {
-		switch (type) {
+	Cell::Cell(const Cell &other) : type(other.type)
+	{
+		switch (type)
+		{
 		case Type::INT64:
 			intValue = other.intValue;
 			break;
@@ -94,8 +105,10 @@ namespace project {
 	}
 
 	// Move Constructor
-	Cell::Cell(Cell&& other) noexcept : type(other.type) {
-		switch (type) {
+	Cell::Cell(Cell &&other) noexcept : type(other.type)
+	{
+		switch (type)
+		{
 		case Type::INT64:
 			intValue = other.intValue;
 			break;
@@ -112,7 +125,6 @@ namespace project {
 		other.destroy();
 	}
 
-
 	Cell::~Cell()
 	{
 		destroy();
@@ -125,19 +137,16 @@ namespace project {
 
 	void Cell::setNull() noexcept
 	{
-		if (type == Type::STRING) {
-			stringValue.~basic_string();
-		}
-		type = Type::NULL_TYPE;
+		destroy();
 	}
 
-
-
-	bool Cell::operator==(const Cell& other) const
+	bool Cell::operator==(const Cell &other) const
 	{
-		if (type != other.type)return false;
-		
-		switch (type) {
+		if (type != other.type)
+			return false;
+
+		switch (type)
+		{
 		case project::Cell::Type::DOUBLE:
 			return other.doubleValue == doubleValue;
 		case project::Cell::Type::INT64:
@@ -149,14 +158,17 @@ namespace project {
 		}
 	}
 
-	bool Cell::operator!=(const Cell& other) const
+	bool Cell::operator!=(const Cell &other) const
 	{
 		return !(*this == other);
 	}
 
-	bool Cell::operator<(const Cell& other) const {
-		if (type != other.type) throw std::runtime_error("Cannot compare Cells of different types");
-		switch (type) {
+	bool Cell::operator<(const Cell &other) const
+	{
+		if (type != other.type)
+			throw std::runtime_error("Cannot compare Cells of different types");
+		switch (type)
+		{
 		case Type::INT64:
 			return intValue < other.intValue;
 		case Type::DOUBLE:
@@ -168,27 +180,34 @@ namespace project {
 		}
 	}
 
-	bool Cell::operator>(const Cell& other) const { return other < *this; }
-	bool Cell::operator<=(const Cell& other) const { return !(*this > other); }
-	bool Cell:: operator>=(const Cell& other) const { return !(*this < other); }
+	bool Cell::operator>(const Cell &other) const { return other < *this; }
+	bool Cell::operator<=(const Cell &other) const { return !(*this > other); }
+	bool Cell::operator>=(const Cell &other) const { return !(*this < other); }
 
 	// Arithmetic Operators
-	Cell Cell::operator+(const Cell& other) const {
-		if (type == Type::INT64 && other.type == Type::INT64) {
+	Cell Cell::operator+(const Cell &other) const
+	{
+		if (type != other.type)
+			throw std::runtime_error("Cannot add Cells of different types");
+		switch (type)
+		{
+		case Type::INT64:
 			return Cell(intValue + other.intValue);
+		case Type::DOUBLE:
+			return Cell(doubleValue + other.doubleValue);
+		case Type::STRING:
+			return Cell(stringValue + other.stringValue);
+		default:
+			throw std::runtime_error("Addition not supported for this type");
 		}
-		else if ((type == Type::INT64 || type == Type::DOUBLE) &&
-			(other.type == Type::INT64 || other.type == Type::DOUBLE)) {
-			double lhs = (type == Type::INT64) ? static_cast<double>(intValue) : doubleValue;
-			double rhs = (other.type == Type::INT64) ? static_cast<double>(other.intValue) : other.doubleValue;
-			return Cell(lhs + rhs);
-		}
-		throw std::runtime_error("Cannot add Cells of different types");
 	}
 
-	Cell Cell::operator-(const Cell& other) const {
-		if (type != other.type) throw std::runtime_error("Cannot subtract Cells of different types");
-		switch (type) {
+	Cell Cell::operator-(const Cell &other) const
+	{
+		if (type != other.type)
+			throw std::runtime_error("Cannot subtract Cells of different types");
+		switch (type)
+		{
 		case Type::INT64:
 			return Cell(intValue - other.intValue);
 		case Type::DOUBLE:
@@ -198,9 +217,12 @@ namespace project {
 		}
 	}
 
-	Cell Cell::operator*(const Cell& other) const {
-		if (type != other.type) throw std::runtime_error("Cannot multiply Cells of different types");
-		switch (type) {
+	Cell Cell::operator*(const Cell &other) const
+	{
+		if (type != other.type)
+			throw std::runtime_error("Cannot multiply Cells of different types");
+		switch (type)
+		{
 		case Type::INT64:
 			return Cell(intValue * other.intValue);
 		case Type::DOUBLE:
@@ -210,22 +232,29 @@ namespace project {
 		}
 	}
 
-	Cell Cell::operator/(const Cell& other) const {
-		if (type != other.type) throw std::runtime_error("Cannot divide Cells of different types");
-		switch (type) {
+	Cell Cell::operator/(const Cell &other) const
+	{
+		if (type != other.type)
+			throw std::runtime_error("Cannot divide Cells of different types");
+		switch (type)
+		{
 		case Type::INT64:
-			if (other.intValue == 0) throw std::runtime_error("Division by zero");
+			if (other.intValue == 0)
+				throw std::runtime_error("Division by zero");
 			return Cell(intValue / other.intValue);
 		case Type::DOUBLE:
-			if (other.doubleValue == 0.0) throw std::runtime_error("Division by zero");
+			if (other.doubleValue == 0.0)
+				throw std::runtime_error("Division by zero");
 			return Cell(doubleValue / other.doubleValue);
 		default:
 			throw std::runtime_error("Division not supported for this type");
 		}
 	}
 
-	std::size_t Cell::hash() const {
-		switch (type) {
+	std::size_t Cell::hash() const
+	{
+		switch (type)
+		{
 		case Type::INT64:
 			return std::hash<int64_t>{}(intValue);
 		case Type::DOUBLE:
@@ -233,7 +262,7 @@ namespace project {
 		case Type::STRING:
 			return std::hash<std::string>{}(stringValue);
 		default:
-			return 0;  
+			return 0;
 		}
 	}
 
