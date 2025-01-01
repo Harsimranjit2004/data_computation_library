@@ -7,7 +7,6 @@
 #include <typeinfo>
 namespace project
 {
-
 	template <typename T>
 	struct always_false : std::false_type
 	{

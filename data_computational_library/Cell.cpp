@@ -1,6 +1,5 @@
 #include <typeinfo>
 #include "Cell.h"
-
 using namespace std;
 namespace project
 {
