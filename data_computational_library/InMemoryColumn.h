@@ -22,8 +22,10 @@ namespace project
 			size_t used{0};
 			size_t peak{0};
 			size_t allocations{0};
+			d
 
-			void update(size_t newAllocated, size_t newUsed)
+				void
+				update(size_t newAllocated, size_t newUsed)
 			{
 				allocated = newAllocated;
 				used = newUsed;
